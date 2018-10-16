@@ -14,6 +14,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -82,13 +83,13 @@ public class Game extends Pane {
         //TODO
         if (pile != null) {
             card.moveToPile(pile);
-            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD){
+            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty()){
                 fromPileOfCard.getTopCard().flip();
             }
             handleValidMove(card, pile);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            //draggedCards = null;
+            draggedCards.clear();
         }
     };
 
@@ -99,6 +100,7 @@ public class Game extends Pane {
 
     public Game() {
         deck = Card.createNewDeck();
+        Collections.shuffle(deck);
         initPiles();
         dealCards();
     }
@@ -118,9 +120,15 @@ public class Game extends Pane {
     public boolean isMoveValid(Card card, Pile destPile) {
         //TODO
         Card destPileTop =  destPile.getTopCard();
-        if(destPileTop.getRank() - card.getRank() == 1 && Card.isOppositeColor(card, destPileTop)){
+        if(!destPile.isEmpty()) {
+            if (destPileTop.getRank() - card.getRank() == 1 && Card.isOppositeColor(card, destPileTop)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (card.getRank() == 13){
             return true;
-        } else {
+        }else{
             return false;
         }
     }
