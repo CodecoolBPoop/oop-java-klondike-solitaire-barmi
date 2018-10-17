@@ -96,9 +96,7 @@ public class Game extends Pane {
                 }
             }
             handleValidMove(card, pile);
-            if (isGameWon()) {
-                gameIsWonMessage();
-            }
+
         } else if (pile1 != null ) {
             card.moveToPile(pile1);
             if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() != pile1.getPileType() ){
