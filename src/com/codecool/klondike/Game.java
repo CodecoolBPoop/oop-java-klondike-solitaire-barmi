@@ -119,8 +119,11 @@ public class Game extends Pane {
 
     public boolean isMoveValid(Card card, Pile destPile) {
         //TODO
+        Card card2 = destPile.getTopCard();
         if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
             if (destPile.isEmpty() && card.getRank() == 1)
+                return true;
+            else if (!destPile.isEmpty() && card.isSameSuit(card, card2) && card.getRank()-card2.getRank() == 1)
                 return true;
             else
                 return false;
