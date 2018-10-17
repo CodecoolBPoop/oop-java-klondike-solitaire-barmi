@@ -80,6 +80,7 @@ public class Card extends ImageView {
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
+        // initial commit
         //TODO
         return true;
     }
