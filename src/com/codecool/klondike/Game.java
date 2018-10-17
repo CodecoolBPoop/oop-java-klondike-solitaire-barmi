@@ -63,7 +63,7 @@ public class Game extends Pane {
         List<Card> cards = activePile.getCards();
 
 
-        if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown() || card != discardPile.getTopCard())
+        if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown() || (activePile.getPileType() == Pile.PileType.DISCARD && card != discardPile.getTopCard()))
             return;
         double offsetX = e.getSceneX() - dragStartX;
         double offsetY = e.getSceneY() - dragStartY;
