@@ -56,7 +56,12 @@ public class Game extends Pane {
 
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
         Card card = (Card) e.getSource();
+
         Pile activePile = card.getContainingPile();
+
+        List<Card> cards = activePile.getCards();
+
+
         if (activePile.getPileType() == Pile.PileType.STOCK)
             return;
         double offsetX = e.getSceneX() - dragStartX;
@@ -73,20 +78,38 @@ public class Game extends Pane {
         card.setTranslateX(offsetX);
         card.setTranslateY(offsetY);
     };
-
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
         if (draggedCards.isEmpty())
             return;
         Card card = (Card) e.getSource();
+        Pile fromPileOfCard = card.getContainingPile();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
+        Pile pile1 = getValidIntersectingPile(card, foundationPiles);
+
         //TODO
         if (pile != null) {
+            card.moveToPile(pile);
+            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() == pile.getPileType()){
+                if (fromPileOfCard.getTopCard().isFaceDown()) {
+                    fromPileOfCard.getTopCard().flip();
+                }
+            }
             handleValidMove(card, pile);
+        } else if (pile1 != null ) {
+            card.moveToPile(pile1);
+            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() != pile1.getPileType() ){
+                if (fromPileOfCard.getTopCard().isFaceDown()) {
+                    fromPileOfCard.getTopCard().flip();
+                }
+            }
+            handleValidMove(card, pile1);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards = null;
+            draggedCards.clear();
         }
+
     };
+
 
     public boolean isGameWon() {
         //TODO
@@ -119,8 +142,28 @@ public class Game extends Pane {
 
     public boolean isMoveValid(Card card, Pile destPile) {
         //TODO
-        return true;
+        Card destPileTop =  destPile.getTopCard();
+        if(!destPile.isEmpty() && destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
+            if (destPileTop.getRank() - card.getRank() == 1 && Card.isOppositeColor(card, destPileTop)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
+            if (destPile.isEmpty() && card.getRank() == 1) {
+                return true;
+            }else if (!destPile.isEmpty() && card.isSameSuit(card, destPileTop) && card.getRank()-destPileTop.getRank() == 1) {
+                return true;
+            }else {
+                return false;
+            }
+        }else if (card.getRank() == 13){
+            return true;
+        } else {
+            return false;
+        }
     }
+
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
         for (Pile pile : piles) {
@@ -133,10 +176,11 @@ public class Game extends Pane {
     }
 
     private boolean isOverPile(Card card, Pile pile) {
-        if (pile.isEmpty())
+        if (pile.isEmpty()) {
             return card.getBoundsInParent().intersects(pile.getBoundsInParent());
-        else
+        }else {
             return card.getBoundsInParent().intersects(pile.getTopCard().getBoundsInParent());
+        }
     }
 
     private void handleValidMove(Card card, Pile destPile) {
@@ -190,6 +234,19 @@ public class Game extends Pane {
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
         //TODO
+        int i = 1;
+        for (Pile pile: tableauPiles){
+            for (int j = 0; j < i; j++) {
+                Card card = deckIterator.next();
+                pile.addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+                deckIterator.remove();
+                if (j == i-1) card.flip();
+            }
+            i++;
+        }
+
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
             addMouseEventHandlers(card);
