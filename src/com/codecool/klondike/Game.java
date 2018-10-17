@@ -89,7 +89,14 @@ public class Game extends Pane {
     };
 
     public boolean isGameWon() {
-        //TODO
+        if (foundationPiles.size() == 52) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("");
+            alert.setHeaderText("YOU WON!");
+            alert.setContentText("Well done! Great job, pal! :)");
+
+            alert.showAndWait();
+        }
         return false;
     }
 
