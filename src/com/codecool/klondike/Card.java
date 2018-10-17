@@ -100,56 +100,45 @@ public class Card extends ImageView {
 
     public static void loadCardImages() {
         cardBackImage = new Image("card_images/card_back.png");
-//        String suitName = "";
-//        for (int suit = 1; suit < 5; suit++) {
-//            switch (suit) {
-//                case 1:
-//                    suitName = "hearts";
-//                    break;
-//                case 2:
-//                    suitName = "diamonds";
-//                    break;
-//                case 3:
-//                    suitName = "spades";
-//                    break;
-//                case 4:
-//                    suitName = "clubs";
-//                    break;
-//            }
-//            for (int rank = 1; rank < 14; rank++) {
-//                String cardName = suitName + rank;
-//                String cardId = "S" + suit + "R" + rank;
-//                String imageFileName = "card_images/" + cardName + ".png";
-//                cardFaceImages.put(cardId, new Image(imageFileName));
-//            }
-//        }
         String cardName = "";
-        for (CardSuit cardSuit:CardSuit.values()){
-            String csTest = cardSuit.cardSuitName;
-            for (CardRank cardRank:CardRank.values()){
-//                cardName += cardSuit.cardSuitName;
-                int crTest = cardRank.getCardRank();
-//                cardName += cardRank.cardRankNumber;
-                cardName = csTest + crTest;
-                String cardId = "S" + csTest + "R" + crTest;
+        for (CardSuit cardSuit : CardSuit.values()) {
+            String cardSuitName = cardSuit.getCardSuitName();
+            int cardSuitNumber = cardSuit.getCardSuitNumber();
+            for (CardRank cardRank : CardRank.values()) {
+                int cardRankNumber = cardRank.getCardRank();
+                cardName = cardSuitName + cardRankNumber;
+                String cardId = "S" + cardSuitNumber + "R" + cardRankNumber;
                 String imageFileName = "card_images/" + cardName + ".png";
                 cardFaceImages.put(cardId, new Image(imageFileName));
-                cardName = "";
             }
         }
 
     }
+
     public enum CardSuit {
-        SPADES("spades"),
-        CLUBS("clubs"),
-        HEARTS("hearts"),
-        DIAMONDS("diamonds")
-        ;
+        HEARTS("hearts", 1),
+        DIAMONDS("diamonds", 2),
+        SPADES("spades", 3),
+        CLUBS("clubs", 4);
+
 
         private final String cardSuitName;
-        CardSuit(String cardSuitName){ this.cardSuitName = cardSuitName;}
+        private final int cardSuitNumber;
 
+        CardSuit(String cardSuitName, int cardSuitNumber) {
+            this.cardSuitName = cardSuitName;
+            this.cardSuitNumber = cardSuitNumber;
+        }
+
+        public String getCardSuitName() {
+            return cardSuitName;
+        }
+
+        public int getCardSuitNumber() {
+            return cardSuitNumber;
+        }
     }
+
     public enum CardRank {
         ACE(1),
         TWO(2),
@@ -163,10 +152,10 @@ public class Card extends ImageView {
         TEN(10),
         JACK(11),
         QUEEN(12),
-        KING(13)
-        ;
+        KING(13);
 
         private final int cardRankNumber;
+
         CardRank(int cardRankNumber) {
             this.cardRankNumber = cardRankNumber;
         }
