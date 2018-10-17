@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -137,12 +139,16 @@ public class Game extends Pane {
     }
 
     public void gameIsWonMessage() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Well done! Great job, pal! :) \nDo you wanna play again?", ButtonType.YES, ButtonType.NO);
         alert.setTitle("");
         alert.setHeaderText("YOU WON!");
-        alert.setContentText("Well done! Great job, pal! :)");
-
         alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            //TODO
+            //restart();
+        }
+
     }
 
     public Game() {
