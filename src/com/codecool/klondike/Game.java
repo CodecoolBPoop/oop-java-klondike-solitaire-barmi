@@ -48,7 +48,7 @@ public class Game extends Pane {
     };
 
     private EventHandler<MouseEvent> stockReverseCardsHandler = e -> {
-        if (stockPile.isEmpty()){
+        if (stockPile.isEmpty()) {
             refillStockFromDiscard();
         }
     };
@@ -91,11 +91,11 @@ public class Game extends Pane {
         Pile pile = getValidIntersectingPile(card, tableauPiles);
         Pile pile1 = getValidIntersectingPile(card, foundationPiles);
 
-        //TODO
+
         if (pile != null) {
             card.moveToPile(pile);
             if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() &&
-                    fromPileOfCard.getPileType() == pile.getPileType()){
+                    fromPileOfCard.getPileType() == pile.getPileType()) {
 
                 if (fromPileOfCard.getTopCard().isFaceDown()) {
                     fromPileOfCard.getTopCard().flip();
@@ -103,10 +103,10 @@ public class Game extends Pane {
             }
             handleValidMove(card, pile);
 
-        } else if (pile1 != null ) {
+        } else if (pile1 != null) {
             card.moveToPile(pile1);
             if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() &&
-                    fromPileOfCard.getPileType() != pile1.getPileType() ){
+                    fromPileOfCard.getPileType() != pile1.getPileType()) {
 
                 if (fromPileOfCard.getTopCard().isFaceDown()) {
                     fromPileOfCard.getTopCard().flip();
@@ -155,7 +155,7 @@ public class Game extends Pane {
 
     public void refillStockFromDiscard() {
         Collections.reverse(discardPile.getCards());
-        for (Card card:discardPile.getCards() ){
+        for (Card card : discardPile.getCards()) {
             card.flip();
             stockPile.addCard(card);
         }
@@ -164,25 +164,24 @@ public class Game extends Pane {
     }
 
     public boolean isMoveValid(Card card, Pile destPile) {
-        //TODO
-        Card destPileTop =  destPile.getTopCard();
-        if(!destPile.isEmpty() && destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
+        Card destPileTop = destPile.getTopCard();
+        if (!destPile.isEmpty() && destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
             if (destPileTop.getRank() - card.getRank() == 1 && Card.isOppositeColor(card, destPileTop)) {
                 return true;
             } else {
                 return false;
             }
-        } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
+        } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
             if (destPile.isEmpty() && card.getRank() == 1) {
                 cardsInFoundation++;
                 return true;
-            }else if (!destPile.isEmpty() && card.isSameSuit(card, destPileTop) && card.getRank()-destPileTop.getRank() == 1) {
+            } else if (!destPile.isEmpty() && card.isSameSuit(card, destPileTop) && card.getRank() - destPileTop.getRank() == 1) {
                 cardsInFoundation++;
                 return true;
-            }else {
+            } else {
                 return false;
             }
-        }else if (card.getRank() == 13){
+        } else if (card.getRank() == 13) {
             return true;
         } else {
             return false;
@@ -203,7 +202,7 @@ public class Game extends Pane {
     private boolean isOverPile(Card card, Pile pile) {
         if (pile.isEmpty()) {
             return card.getBoundsInParent().intersects(pile.getBoundsInParent());
-        }else {
+        } else {
             return card.getBoundsInParent().intersects(pile.getTopCard().getBoundsInParent());
         }
     }
@@ -258,16 +257,15 @@ public class Game extends Pane {
 
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        //TODO
         int i = 1;
-        for (Pile pile: tableauPiles){
+        for (Pile pile : tableauPiles) {
             for (int j = 0; j < i; j++) {
                 Card card = deckIterator.next();
                 pile.addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
                 deckIterator.remove();
-                if (j == i-1) card.flip();
+                if (j == i - 1) card.flip();
             }
             i++;
         }
