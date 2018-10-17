@@ -87,11 +87,10 @@ public class Game extends Pane {
             handleValidMove(card, pile1);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            //draggedCards = null;
+            draggedCards.clear();
         }
 
     };
-
 
     public boolean isGameWon() {
         //TODO
