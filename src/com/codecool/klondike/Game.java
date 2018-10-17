@@ -13,7 +13,10 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class Game extends Pane {
 
@@ -87,14 +90,22 @@ public class Game extends Pane {
         //TODO
         if (pile != null) {
             card.moveToPile(pile);
-            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty()){
-                fromPileOfCard.getTopCard().flip();
+            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() == pile.getPileType()){
+                if (fromPileOfCard.getTopCard().isFaceDown()) {
+                    fromPileOfCard.getTopCard().flip();
+                }
             }
             handleValidMove(card, pile);
             if (isGameWon()) {
                 gameIsWonMessage();
             }
         } else if (pile1 != null ) {
+            card.moveToPile(pile1);
+            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() != pile1.getPileType() ){
+                if (fromPileOfCard.getTopCard().isFaceDown()) {
+                    fromPileOfCard.getTopCard().flip();
+                }
+            }
             handleValidMove(card, pile1);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
@@ -142,32 +153,27 @@ public class Game extends Pane {
     public boolean isMoveValid(Card card, Pile destPile) {
         //TODO
         Card destPileTop =  destPile.getTopCard();
-        if(!destPile.isEmpty()) {
+        if(!destPile.isEmpty() && destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
             if (destPileTop.getRank() - card.getRank() == 1 && Card.isOppositeColor(card, destPileTop)) {
                 return true;
             } else {
                 return false;
             }
-        } else if (card.getRank() == 13){
-            return true;
-        }else{
-            return false;
-        }
-        Card card2 = destPile.getTopCard();
-        if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
+        } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
             if (destPile.isEmpty() && card.getRank() == 1) {
                 cardsInFoundation++;
                 return true;
-            }
-            else if (!destPile.isEmpty() && card.isSameSuit(card, card2) && card.getRank()-card2.getRank() == 1) {
+            }else if (!destPile.isEmpty() && card.isSameSuit(card, destPileTop) && card.getRank()-destPileTop.getRank() == 1) {
                 cardsInFoundation++;
                 return true;
-            }
-            else
+            }else {
                 return false;
+            }
+        }else if (card.getRank() == 13){
+            return true;
+        } else {
+            return false;
         }
-
-        return true;
     }
 
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
@@ -258,6 +264,7 @@ public class Game extends Pane {
             addMouseEventHandlers(card);
             getChildren().add(card);
         });
+
     }
 
     public void setTableBackground(Image tableBackground) {
