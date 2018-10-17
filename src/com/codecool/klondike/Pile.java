@@ -40,10 +40,10 @@ public class Pile extends Pane {
     }
 
     public int numOfCards() {
-        // initial commit
-        //TODO
-        return 1;
+        int numOfCards = cards.size();
+        return numOfCards;
     }
+
 
     public boolean isEmpty() {
         return cards.isEmpty();
