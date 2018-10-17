@@ -13,10 +13,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Game extends Pane {
 
@@ -33,6 +30,7 @@ public class Game extends Pane {
     private static double STOCK_GAP = 1;
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
+    private static int cardsInFoundation = 0;
 
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
@@ -93,6 +91,9 @@ public class Game extends Pane {
                 fromPileOfCard.getTopCard().flip();
             }
             handleValidMove(card, pile);
+            if (isGameWon()) {
+                gameIsWonMessage();
+            }
         } else if (pile1 != null ) {
             handleValidMove(card, pile1);
         } else {
@@ -104,15 +105,19 @@ public class Game extends Pane {
 
 
     public boolean isGameWon() {
-        if (foundationPiles.size() == 52) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("");
-            alert.setHeaderText("YOU WON!");
-            alert.setContentText("Well done! Great job, pal! :)");
-
-            alert.showAndWait();
+        if (cardsInFoundation == 52) {
+            return true;
         }
         return false;
+    }
+
+    public void gameIsWonMessage() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("YOU WON!");
+        alert.setContentText("Well done! Great job, pal! :)");
+
+        alert.showAndWait();
     }
 
     public Game() {
@@ -150,10 +155,14 @@ public class Game extends Pane {
         }
         Card card2 = destPile.getTopCard();
         if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
-            if (destPile.isEmpty() && card.getRank() == 1)
+            if (destPile.isEmpty() && card.getRank() == 1) {
+                cardsInFoundation++;
                 return true;
-            else if (!destPile.isEmpty() && card.isSameSuit(card, card2) && card.getRank()-card2.getRank() == 1)
+            }
+            else if (!destPile.isEmpty() && card.isSameSuit(card, card2) && card.getRank()-card2.getRank() == 1) {
+                cardsInFoundation++;
                 return true;
+            }
             else
                 return false;
         }
@@ -249,7 +258,6 @@ public class Game extends Pane {
             addMouseEventHandlers(card);
             getChildren().add(card);
         });
-
     }
 
     public void setTableBackground(Image tableBackground) {
