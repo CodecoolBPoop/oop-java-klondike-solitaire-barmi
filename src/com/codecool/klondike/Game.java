@@ -62,6 +62,16 @@ public class Game extends Pane {
 
         List<Card> cards = activePile.getCards();
 
+        if(activePile.getPileType() == Pile.PileType.TABLEAU){
+            List<Card> temp = FXCollections.observableArrayList();
+            for(Card c : cards){
+                if(!c.isFaceDown() && c.getRank() <= card.getRank()){
+                    temp.add(c);
+                }
+            }
+            cards = temp;
+        }
+
 
         if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown() || (activePile.getPileType() == Pile.PileType.DISCARD && card != discardPile.getTopCard()))
             return;
@@ -69,7 +79,12 @@ public class Game extends Pane {
         double offsetY = e.getSceneY() - dragStartY;
 
         draggedCards.clear();
-        draggedCards.add(card);
+
+        if(activePile.getPileType() == Pile.PileType.TABLEAU){
+            draggedCards.addAll(cards);
+        } else {
+            draggedCards.add(card);
+        }
 
         card.getDropShadow().setRadius(20);
         card.getDropShadow().setOffsetX(10);
@@ -79,6 +94,7 @@ public class Game extends Pane {
         card.setTranslateX(offsetX);
         card.setTranslateY(offsetY);
     };
+
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
         if (draggedCards.isEmpty())
             return;
@@ -89,7 +105,7 @@ public class Game extends Pane {
 
         //TODO
         if (pile != null) {
-            card.moveToPile(pile);
+            for(Card c : draggedCards) c.moveToPile(pile);
             if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() == pile.getPileType()){
                 if (fromPileOfCard.getTopCard().isFaceDown()) {
                     fromPileOfCard.getTopCard().flip();
