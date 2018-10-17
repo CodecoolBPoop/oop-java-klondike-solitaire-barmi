@@ -33,7 +33,6 @@ public class Game extends Pane {
     private static double STOCK_GAP = 1;
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
-    private static int cardsInFoundation = 0;
 
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
@@ -118,10 +117,17 @@ public class Game extends Pane {
 
 
     public boolean isGameWon() {
-        if (cardsInFoundation == 52) {
-            return true;
+        int pilesComplited = 0;
+        for (Pile pile: foundationPiles) {
+            if (pile.numOfCards() == 13) {
+                pilesComplited++;
+            }
         }
-        return false;
+        if (pilesComplited == 4) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void gameIsWonMessage() {
@@ -168,10 +174,8 @@ public class Game extends Pane {
             }
         } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
             if (destPile.isEmpty() && card.getRank() == 1) {
-                cardsInFoundation++;
                 return true;
             }else if (!destPile.isEmpty() && card.isSameSuit(card, destPileTop) && card.getRank()-destPileTop.getRank() == 1) {
-                cardsInFoundation++;
                 return true;
             }else {
                 return false;
