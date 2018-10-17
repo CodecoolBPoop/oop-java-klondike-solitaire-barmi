@@ -119,7 +119,7 @@ public class Game extends Pane {
             }
 
 
-        } else if (pile1 != null ) {
+        } else if (pile1 != null && card == fromPileOfCard.getTopCard()) {
             card.moveToPile(pile1);
             draggedCards.clear();
             handleValidMove(card, pile1);
