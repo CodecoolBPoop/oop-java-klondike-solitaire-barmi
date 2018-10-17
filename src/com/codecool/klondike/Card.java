@@ -80,17 +80,20 @@ public class Card extends ImageView {
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
-        //TODO
-        if (card1.getSuit() == 1 || card1.getSuit() == 2) {
-            if (card2.getSuit() == 3 || card2.getSuit() == 4) {
-                return true;
-            }
-        } else if (card1.getSuit() == 3 || card1.getSuit() == 4) {
-            if (card2.getSuit() == 1 || card2.getSuit() == 2) {
-                return true;
+
+        boolean isOppositeColor=false;
+        if (card1.cardSuit == CardSuit.HEARTS || card1.cardSuit == CardSuit.DIAMONDS){
+            if (card2.cardSuit == CardSuit.SPADES || card2.cardSuit == CardSuit.CLUBS){
+                isOppositeColor = true;
             }
         }
-        return false;
+        if (card2.cardSuit == CardSuit.HEARTS || card2.cardSuit == CardSuit.DIAMONDS){
+            if (card1.cardSuit == CardSuit.SPADES || card1.cardSuit == CardSuit.CLUBS){
+                isOppositeColor = true;
+            }
+        }
+        return isOppositeColor;
+
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
