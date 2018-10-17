@@ -80,9 +80,18 @@ public class Card extends ImageView {
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
-        // initial commit
-        //TODO
-        return true;
+        boolean isOppositeColor=false;
+        if (card1.cardSuit == CardSuit.HEARTS || card1.cardSuit == CardSuit.DIAMONDS){
+            if (card2.cardSuit == CardSuit.SPADES || card2.cardSuit == CardSuit.CLUBS){
+                isOppositeColor = true;
+            }
+        }
+        if (card2.cardSuit == CardSuit.HEARTS || card2.cardSuit == CardSuit.DIAMONDS){
+            if (card1.cardSuit == CardSuit.SPADES || card1.cardSuit == CardSuit.CLUBS){
+                isOppositeColor = true;
+            }
+        }
+        return isOppositeColor;
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
