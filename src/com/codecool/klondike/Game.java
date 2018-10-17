@@ -162,11 +162,9 @@ public class Game extends Pane {
         } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
             if (destPile.isEmpty() && card.getRank() == 1) {
                 cardsInFoundation++;
-                System.out.println(cardsInFoundation);
                 return true;
             }else if (!destPile.isEmpty() && card.isSameSuit(card, destPileTop) && card.getRank()-destPileTop.getRank() == 1) {
                 cardsInFoundation++;
-                System.out.println(cardsInFoundation);
                 return true;
             }else {
                 return false;
