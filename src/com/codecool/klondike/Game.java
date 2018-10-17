@@ -105,13 +105,13 @@ public class Game extends Pane {
                     fromPileOfCard.getTopCard().flip();
                 }
             }
+            if (isGameWon()) {
+                gameIsWonMessage();
+            }
             handleValidMove(card, pile1);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
             draggedCards.clear();
-        }
-        if (isGameWon()) {
-            gameIsWonMessage();
         }
     };
 
