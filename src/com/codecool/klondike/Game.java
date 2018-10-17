@@ -60,9 +60,10 @@ public class Game extends Pane {
 
         Pile activePile = card.getContainingPile();
 
-        List<Card> cards = activePile.getCards();
+        List<Card> cards = FXCollections.observableArrayList();
 
         if(activePile.getPileType() == Pile.PileType.TABLEAU){
+            cards = activePile.getCards();
             List<Card> temp = FXCollections.observableArrayList();
             for(Card c : cards){
                 if(!c.isFaceDown() && c.getRank() <= card.getRank()){
@@ -80,7 +81,7 @@ public class Game extends Pane {
 
         draggedCards.clear();
 
-        if(activePile.getPileType() == Pile.PileType.TABLEAU){
+        if(activePile.getPileType() == Pile.PileType.TABLEAU && cards.size() > 1){
             draggedCards.addAll(cards);
         } else {
             draggedCards.add(card);
@@ -105,24 +106,38 @@ public class Game extends Pane {
 
         //TODO
         if (pile != null) {
+
             for(Card c : draggedCards) c.moveToPile(pile);
+            draggedCards.clear();
+            handleValidMove(card, pile);
+
             if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() == pile.getPileType()){
                 if (fromPileOfCard.getTopCard().isFaceDown()) {
+                    System.out.println(fromPileOfCard.getTopCard().getShortName());
                     fromPileOfCard.getTopCard().flip();
                 }
             }
-            handleValidMove(card, pile);
+
 
         } else if (pile1 != null ) {
             card.moveToPile(pile1);
+            draggedCards.clear();
+            handleValidMove(card, pile1);
+
             if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() != pile1.getPileType() ){
                 if (fromPileOfCard.getTopCard().isFaceDown()) {
                     fromPileOfCard.getTopCard().flip();
                 }
             }
-            handleValidMove(card, pile1);
+
         } else {
-            draggedCards.forEach(MouseUtil::slideBack);
+            MouseUtil.slideBack(card);
+            //draggedCards.forEach(MouseUtil::slideBack);
+            for(Card c: draggedCards){
+                if(c != card){
+                    c.toFront();
+                }
+            }
             draggedCards.clear();
         }
         if (isGameWon()) {
