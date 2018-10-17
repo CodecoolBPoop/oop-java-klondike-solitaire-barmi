@@ -78,13 +78,14 @@ public class Game extends Pane {
         card.setTranslateX(offsetX);
         card.setTranslateY(offsetY);
     };
-
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
         if (draggedCards.isEmpty())
             return;
         Card card = (Card) e.getSource();
         Pile fromPileOfCard = card.getContainingPile();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
+        Pile pile1 = getValidIntersectingPile(card, foundationPiles);
+
         //TODO
         if (pile != null) {
             card.moveToPile(pile);
@@ -92,11 +93,15 @@ public class Game extends Pane {
                 fromPileOfCard.getTopCard().flip();
             }
             handleValidMove(card, pile);
+        } else if (pile1 != null ) {
+            handleValidMove(card, pile1);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
             draggedCards.clear();
         }
+
     };
+
 
     public boolean isGameWon() {
         //TODO
@@ -105,7 +110,7 @@ public class Game extends Pane {
 
     public Game() {
         deck = Card.createNewDeck();
-        Collections.shuffle(deck);
+        shuffleDeck();
         initPiles();
         dealCards();
     }
@@ -136,6 +141,17 @@ public class Game extends Pane {
         }else{
             return false;
         }
+        Card card2 = destPile.getTopCard();
+        if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
+            if (destPile.isEmpty() && card.getRank() == 1)
+                return true;
+            else if (!destPile.isEmpty() && card.isSameSuit(card, card2) && card.getRank()-card2.getRank() == 1)
+                return true;
+            else
+                return false;
+        }
+
+        return true;
     }
 
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
@@ -235,4 +251,7 @@ public class Game extends Pane {
                 BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
     }
 
+    public void shuffleDeck() {
+        Collections.shuffle(deck);
+    }
 }
