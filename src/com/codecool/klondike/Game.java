@@ -33,6 +33,7 @@ public class Game extends Pane {
     private static double STOCK_GAP = 1;
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
+    private static int cardsInFoundation = 0;
 
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
@@ -95,6 +96,7 @@ public class Game extends Pane {
                 }
             }
             handleValidMove(card, pile);
+
         } else if (pile1 != null ) {
             card.moveToPile(pile1);
             if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() != pile1.getPileType() ){
@@ -107,13 +109,26 @@ public class Game extends Pane {
             draggedCards.forEach(MouseUtil::slideBack);
             draggedCards.clear();
         }
-
+        if (isGameWon()) {
+            gameIsWonMessage();
+        }
     };
 
 
     public boolean isGameWon() {
-        //TODO
+        if (cardsInFoundation == 52) {
+            return true;
+        }
         return false;
+    }
+
+    public void gameIsWonMessage() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("YOU WON!");
+        alert.setContentText("Well done! Great job, pal! :)");
+
+        alert.showAndWait();
     }
 
     public Game() {
@@ -151,8 +166,10 @@ public class Game extends Pane {
             }
         } else if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)){
             if (destPile.isEmpty() && card.getRank() == 1) {
+                cardsInFoundation++;
                 return true;
             }else if (!destPile.isEmpty() && card.isSameSuit(card, destPileTop) && card.getRank()-destPileTop.getRank() == 1) {
+                cardsInFoundation++;
                 return true;
             }else {
                 return false;
