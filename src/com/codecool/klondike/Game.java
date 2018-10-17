@@ -38,7 +38,8 @@ public class Game extends Pane {
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
-        if (card.getContainingPile().getPileType() == Pile.PileType.STOCK && card == card.getContainingPile().getTopCard()) {
+        if (card.getContainingPile().getPileType() == Pile.PileType.STOCK &&
+                card == card.getContainingPile().getTopCard()) {
             card.moveToPile(discardPile);
             card.flip();
             card.setMouseTransparent(false);
@@ -65,7 +66,8 @@ public class Game extends Pane {
         List<Card> cards = activePile.getCards();
 
 
-        if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown() || (activePile.getPileType() == Pile.PileType.DISCARD && card != discardPile.getTopCard()))
+        if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown() ||
+                (activePile.getPileType() == Pile.PileType.DISCARD && card != discardPile.getTopCard()))
             return;
         double offsetX = e.getSceneX() - dragStartX;
         double offsetY = e.getSceneY() - dragStartY;
@@ -92,7 +94,9 @@ public class Game extends Pane {
         //TODO
         if (pile != null) {
             card.moveToPile(pile);
-            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() == pile.getPileType()){
+            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() &&
+                    fromPileOfCard.getPileType() == pile.getPileType()){
+
                 if (fromPileOfCard.getTopCard().isFaceDown()) {
                     fromPileOfCard.getTopCard().flip();
                 }
@@ -101,7 +105,9 @@ public class Game extends Pane {
 
         } else if (pile1 != null ) {
             card.moveToPile(pile1);
-            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() && fromPileOfCard.getPileType() != pile1.getPileType() ){
+            if (fromPileOfCard.getPileType() != Pile.PileType.DISCARD && !fromPileOfCard.isEmpty() &&
+                    fromPileOfCard.getPileType() != pile1.getPileType() ){
+
                 if (fromPileOfCard.getTopCard().isFaceDown()) {
                     fromPileOfCard.getTopCard().flip();
                 }
