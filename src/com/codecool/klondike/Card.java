@@ -12,6 +12,8 @@ public class Card extends ImageView {
     private int suit;
     private int rank;
     private boolean faceDown;
+    private CardSuit cardSuit;
+    private CardRank cardRank;
 
     private Image backFace;
     private Image frontFace;
@@ -79,7 +81,16 @@ public class Card extends ImageView {
 
     public static boolean isOppositeColor(Card card1, Card card2) {
         //TODO
-        return true;
+        if (card1.getSuit() == 1 || card1.getSuit() == 2) {
+            if (card2.getSuit() == 3 || card2.getSuit() == 4) {
+                return true;
+            }
+        } else if (card1.getSuit() == 3 || card1.getSuit() == 4) {
+            if (card2.getSuit() == 1 || card2.getSuit() == 2) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
@@ -98,29 +109,70 @@ public class Card extends ImageView {
 
     public static void loadCardImages() {
         cardBackImage = new Image("card_images/card_back.png");
-        String suitName = "";
-        for (int suit = 1; suit < 5; suit++) {
-            switch (suit) {
-                case 1:
-                    suitName = "hearts";
-                    break;
-                case 2:
-                    suitName = "diamonds";
-                    break;
-                case 3:
-                    suitName = "spades";
-                    break;
-                case 4:
-                    suitName = "clubs";
-                    break;
-            }
-            for (int rank = 1; rank < 14; rank++) {
-                String cardName = suitName + rank;
-                String cardId = "S" + suit + "R" + rank;
+        String cardName = "";
+        for (CardSuit cardSuit : CardSuit.values()) {
+            String cardSuitName = cardSuit.getCardSuitName();
+            int cardSuitNumber = cardSuit.getCardSuitNumber();
+            for (CardRank cardRank : CardRank.values()) {
+                int cardRankNumber = cardRank.getCardRank();
+                cardName = cardSuitName + cardRankNumber;
+                String cardId = "S" + cardSuitNumber + "R" + cardRankNumber;
                 String imageFileName = "card_images/" + cardName + ".png";
                 cardFaceImages.put(cardId, new Image(imageFileName));
             }
         }
+
+    }
+
+    public enum CardSuit {
+        HEARTS("hearts", 1),
+        DIAMONDS("diamonds", 2),
+        SPADES("spades", 3),
+        CLUBS("clubs", 4);
+
+
+        private final String cardSuitName;
+        private final int cardSuitNumber;
+
+        CardSuit(String cardSuitName, int cardSuitNumber) {
+            this.cardSuitName = cardSuitName;
+            this.cardSuitNumber = cardSuitNumber;
+        }
+
+        public String getCardSuitName() {
+            return cardSuitName;
+        }
+
+        public int getCardSuitNumber() {
+            return cardSuitNumber;
+        }
+    }
+
+    public enum CardRank {
+        ACE(1),
+        TWO(2),
+        THREE(3),
+        FOUR(4),
+        FIVE(5),
+        SIX(6),
+        SEVEN(7),
+        EIGHT(8),
+        NINE(9),
+        TEN(10),
+        JACK(11),
+        QUEEN(12),
+        KING(13);
+
+        private final int cardRankNumber;
+
+        CardRank(int cardRankNumber) {
+            this.cardRankNumber = cardRankNumber;
+        }
+
+        public int getCardRank() {
+            return this.cardRankNumber;
+        }
+
     }
 
 }
