@@ -81,14 +81,14 @@ public class Card extends ImageView {
 
     public static boolean isOppositeColor(Card card1, Card card2) {
 
-        boolean isOppositeColor=false;
-        if (card1.suit == CardSuit.HEARTS.getCardSuitNumber() || card1.suit == CardSuit.DIAMONDS.getCardSuitNumber()){
-            if (card2.suit == CardSuit.SPADES.getCardSuitNumber() || card2.suit == CardSuit.CLUBS.getCardSuitNumber()){
+        boolean isOppositeColor = false;
+        if (card1.suit == CardSuit.HEARTS.getCardSuitNumber() || card1.suit == CardSuit.DIAMONDS.getCardSuitNumber()) {
+            if (card2.suit == CardSuit.SPADES.getCardSuitNumber() || card2.suit == CardSuit.CLUBS.getCardSuitNumber()) {
                 isOppositeColor = true;
             }
         }
-        if (card2.suit == CardSuit.HEARTS.getCardSuitNumber() || card2.suit == CardSuit.DIAMONDS.getCardSuitNumber()){
-            if (card1.suit == CardSuit.SPADES.getCardSuitNumber() || card1.suit == CardSuit.CLUBS.getCardSuitNumber()){
+        if (card2.suit == CardSuit.HEARTS.getCardSuitNumber() || card2.suit == CardSuit.DIAMONDS.getCardSuitNumber()) {
+            if (card1.suit == CardSuit.SPADES.getCardSuitNumber() || card1.suit == CardSuit.CLUBS.getCardSuitNumber()) {
                 isOppositeColor = true;
             }
         }
