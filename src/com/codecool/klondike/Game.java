@@ -352,6 +352,7 @@ public class Game extends Pane {
       tableauPiles.clear();
       getChildren().clear();
 
+
       deck = Card.createNewDeck();
       shuffleDeck();
       initPiles();
