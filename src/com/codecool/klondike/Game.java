@@ -46,6 +46,38 @@ public class Game extends Pane {
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
         }
+        if(e.getClickCount() == 2 && !card.isFaceDown()){
+            System.out.println(card);
+            List cardList = new ArrayList();
+            cardList.add(card);
+            int foundationIsEmpty = foundationPiles.get(0).numOfCards() + foundationPiles.get(1).numOfCards() + foundationPiles.get(2).numOfCards() + foundationPiles.get(3).numOfCards();
+            if (foundationIsEmpty <= 4 && card.getRank() == 1) {
+                System.out.println("Double clicked");
+                Pile pile = getValidIntersectingPile(card, foundationPiles);
+                if (foundationPiles.get(0).isEmpty()) {
+                    MouseUtil.slideToDest(cardList, foundationPiles.get(0));
+                } else if (foundationPiles.get(1).isEmpty()) {
+                    MouseUtil.slideToDest(cardList, foundationPiles.get(1));
+                } else if (foundationPiles.get(2).isEmpty()) {
+                    MouseUtil.slideToDest(cardList, foundationPiles.get(2));
+                } else if (foundationPiles.get(3).isEmpty()) {
+                    MouseUtil.slideToDest(cardList, foundationPiles.get(3));
+                }
+                if (card.getContainingPile().getPileType() == Pile.PileType.STOCK &&
+                        card == card.getContainingPile().getTopCard()) {
+                    card.moveToPile(discardPile);
+                    card.flip();
+                    card.setMouseTransparent(false);
+                    System.out.println("Placed " + card + " to the waste.");
+                }
+
+
+
+//                Pile pile = getValidIntersectingPile(card, foundationPiles);
+//                MouseUtil.slideToDest(draggedCards, pile);
+            }
+
+        }
     };
 
     private EventHandler<MouseEvent> stockReverseCardsHandler = e -> {
