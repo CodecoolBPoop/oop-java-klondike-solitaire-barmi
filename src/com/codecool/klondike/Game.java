@@ -275,12 +275,25 @@ public class Game extends Pane {
             @Override
             public void handle(ActionEvent e) {
                 System.out.println("restart button created");
-                //restart();
+                restart();
             }
         });
 
 
     }
+  public void restart() {
+      discardPile.clear();
+      foundationPiles.clear();
+      stockPile.clear();
+      tableauPiles.clear();
+
+      deck = Card.createNewDeck();
+      shuffleDeck();
+      initPiles();
+      dealCards();
+      addEventToRestartButton();
+  }
+
 
 }
 
