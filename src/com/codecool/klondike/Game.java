@@ -54,6 +54,8 @@ public class Game extends Pane {
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
         }
+        int movedCardsCount = 0;
+
         if(e.getClickCount() == 2 && !card.isFaceDown() && card.getContainingPile().getTopCard() == card){
             List cardList = new ArrayList();
             cardList.add(card);
@@ -69,30 +71,45 @@ public class Game extends Pane {
 //                    }
 //                }
                 if (foundationPiles.get(0).isEmpty()) {
+                    movedCardsCount++;
+                    numOfMovedCards.add(movedCardsCount);
+                    moveAdder(cardPile, card);
                     MouseUtil.slideToDest(cardList, foundationPiles.get(0));
                     if (!cardPile.isEmpty() && cardPile.getPileType() != Pile.PileType.DISCARD) {
                         cardPile.getTopCard().flip();
                     }
                 } else if (foundationPiles.get(1).isEmpty()) {
+                    movedCardsCount++;
+                    numOfMovedCards.add(movedCardsCount);
+                    moveAdder(cardPile, card);
                     MouseUtil.slideToDest(cardList, foundationPiles.get(1));
                     if (!cardPile.isEmpty() && cardPile.getPileType() != Pile.PileType.DISCARD) {
                         cardPile.getTopCard().flip();
                     }
                 } else if (foundationPiles.get(2).isEmpty()) {
+                    movedCardsCount++;
+                    numOfMovedCards.add(movedCardsCount);
+                    moveAdder(cardPile, card);
                     MouseUtil.slideToDest(cardList, foundationPiles.get(2));
                     if (!cardPile.isEmpty() && cardPile.getPileType() != Pile.PileType.DISCARD) {
                         cardPile.getTopCard().flip();
                     }
                 } else if (foundationPiles.get(3).isEmpty()) {
+                    movedCardsCount++;
+                    numOfMovedCards.add(movedCardsCount);
+                    moveAdder(cardPile, card);
                     MouseUtil.slideToDest(cardList, foundationPiles.get(3));
                     if (!cardPile.isEmpty() && cardPile.getPileType() != Pile.PileType.DISCARD) {
                         cardPile.getTopCard().flip();
                     }
                 }
             }
-            if (card.getRank() > 1) {
+            if (card.getRank() > 1 ) {
                 for (Pile pile: foundationPiles) {
                     if (pile.getTopCard().getSuit() == card.getSuit() && card.getRank() - pile.getTopCard().getRank() == 1) {
+                        movedCardsCount++;
+                        numOfMovedCards.add(movedCardsCount);
+                        moveAdder(cardPile, card);
                         MouseUtil.slideToDest(cardList, pile);
                         if (!cardPile.isEmpty() && cardPile.getPileType() != Pile.PileType.DISCARD && cardPile.getTopCard().isFaceDown()) {
                             cardPile.getTopCard().flip();
@@ -104,6 +121,7 @@ public class Game extends Pane {
             if (isGameWon()) {
                 gameIsWonMessage();
             }
+
         }
     };
 
@@ -461,8 +479,10 @@ public class Game extends Pane {
                     if(!c.isFaceDown()) flipCount++;
                 }
                 if(!fromPile.isEmpty() && flipCount == 1) fromPile.getTopCard().flip();
-            }
-            
+            } //else if(fromPile.getPileType() == Pile.PileType.FOUNDATION){
+
+            //}
+
             while (tempIterator.hasNext()){
                 Card card = tempIterator.next();
                 Pile pile = pileTempIterator.next();
