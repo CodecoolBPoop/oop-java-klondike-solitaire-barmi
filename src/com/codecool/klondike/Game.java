@@ -57,6 +57,14 @@ public class Game extends Pane {
             Card nextCard = card.getContainingPile().getTopCard();
             Pile cardPile = card.getContainingPile();
             if (card.getRank() == 1) {
+//                for (Pile pile: foundationPiles) {
+//                    if (pile.isEmpty()) {
+//                        MouseUtil.slideToDest(cardList, pile);
+//                        if (!cardPile.isEmpty() && cardPile.getPileType() != Pile.PileType.DISCARD && cardPile.getTopCard().isFaceDown()) {
+//                            cardPile.getTopCard().flip();
+//                        }
+//                    }
+//                }
                 if (foundationPiles.get(0).isEmpty()) {
                     MouseUtil.slideToDest(cardList, foundationPiles.get(0));
                     if (!cardPile.isEmpty() && cardPile.getPileType() != Pile.PileType.DISCARD) {
@@ -215,7 +223,7 @@ public class Game extends Pane {
 
         if (alert.getResult() == ButtonType.YES) {
             //TODO
-            //restart();
+            restart();
         }
 
     }
