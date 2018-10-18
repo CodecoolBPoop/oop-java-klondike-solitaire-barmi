@@ -3,6 +3,7 @@ package com.codecool.klondike;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -14,6 +15,7 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +37,9 @@ public class Game extends Pane {
     private static double STOCK_GAP = 1;
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
+
+    private Button buttonRestart;
+
 
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
@@ -145,7 +150,6 @@ public class Game extends Pane {
         }
     };
 
-
     public boolean isGameWon() {
         int pilesComplited = 0;
         for (Pile pile: foundationPiles) {
@@ -178,6 +182,7 @@ public class Game extends Pane {
         shuffleDeck();
         initPiles();
         dealCards();
+        addEventToRestartButton();
     }
 
     public void addMouseEventHandlers(Card card) {
@@ -269,6 +274,14 @@ public class Game extends Pane {
         discardPile.setLayoutY(20);
         getChildren().add(discardPile);
 
+        buttonRestart = new Button("Restart");
+        buttonRestart.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
+        buttonRestart.setVisible(true);
+        buttonRestart.setLayoutX(450);
+        buttonRestart.setLayoutX(450);
+        getChildren().add(buttonRestart);
+
+
         for (int i = 0; i < 4; i++) {
             Pile foundationPile = new Pile(Pile.PileType.FOUNDATION, "Foundation " + i, FOUNDATION_GAP);
             foundationPile.setBlurredBackground();
@@ -319,4 +332,31 @@ public class Game extends Pane {
     public void shuffleDeck() {
         Collections.shuffle(deck);
     }
+
+    public void addEventToRestartButton() {
+
+        buttonRestart.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                System.out.println("restart button created");
+                restart();
+            }
+        });
+
+
+    }
+  public void restart() {
+      discardPile.clear();
+      foundationPiles.clear();
+      stockPile.clear();
+      tableauPiles.clear();
+
+      deck = Card.createNewDeck();
+      shuffleDeck();
+      initPiles();
+      dealCards();
+      addEventToRestartButton();
+  }
+
+
 }
