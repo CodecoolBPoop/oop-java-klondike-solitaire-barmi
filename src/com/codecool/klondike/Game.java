@@ -60,6 +60,11 @@ public class Game extends Pane {
 
         Pile activePile = card.getContainingPile();
 
+        if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown() || (activePile.getPileType() == Pile.PileType.DISCARD && card != discardPile.getTopCard()))
+            return;
+        double offsetX = e.getSceneX() - dragStartX;
+        double offsetY = e.getSceneY() - dragStartY;
+
         List<Card> cards = FXCollections.observableArrayList();
 
         if(activePile.getPileType() == Pile.PileType.TABLEAU){
@@ -73,12 +78,6 @@ public class Game extends Pane {
             cards = temp;
         }
 
-
-        if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown() || (activePile.getPileType() == Pile.PileType.DISCARD && card != discardPile.getTopCard()))
-            return;
-        double offsetX = e.getSceneX() - dragStartX;
-        double offsetY = e.getSceneY() - dragStartY;
-
         draggedCards.clear();
 
         if(activePile.getPileType() == Pile.PileType.TABLEAU && cards.size() > 1){
@@ -90,10 +89,11 @@ public class Game extends Pane {
         card.getDropShadow().setRadius(20);
         card.getDropShadow().setOffsetX(10);
         card.getDropShadow().setOffsetY(10);
-
-        card.toFront();
-        card.setTranslateX(offsetX);
-        card.setTranslateY(offsetY);
+        for(Card c : draggedCards){
+            c.toFront();
+            c.setTranslateX(offsetX);
+            c.setTranslateY(offsetY);
+        }
     };
 
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
@@ -131,14 +131,9 @@ public class Game extends Pane {
             }
 
         } else {
-            MouseUtil.slideBack(card);
-            //draggedCards.forEach(MouseUtil::slideBack);
-            for(Card c: draggedCards){
-                if(c != card){
-                    c.toFront();
-                }
-            }
+            draggedCards.forEach(MouseUtil::slideBack);
             draggedCards.clear();
+
         }
         if (isGameWon()) {
             gameIsWonMessage();
