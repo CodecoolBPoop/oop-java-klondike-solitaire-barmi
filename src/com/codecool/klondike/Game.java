@@ -51,16 +51,12 @@ public class Game extends Pane {
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
         }
-        if(e.getClickCount() == 2 && !card.isFaceDown()){
-            System.out.println(card);
+        if(e.getClickCount() == 2 && !card.isFaceDown() && card.getContainingPile().getTopCard() == card){
             List cardList = new ArrayList();
             cardList.add(card);
             Card nextCard = card.getContainingPile().getTopCard();
             Pile cardPile = card.getContainingPile();
-            int foundationIsEmpty = foundationPiles.get(0).numOfCards() + foundationPiles.get(1).numOfCards() + foundationPiles.get(2).numOfCards() + foundationPiles.get(3).numOfCards();
-            if (foundationIsEmpty <= 4 && card.getRank() == 1) {
-                System.out.println("Double clicked");
-                Pile pile = getValidIntersectingPile(card, foundationPiles);
+            if (card.getRank() == 1) {
                 if (foundationPiles.get(0).isEmpty()) {
                     MouseUtil.slideToDest(cardList, foundationPiles.get(0));
                     if (!cardPile.isEmpty() && cardPile.getPileType() != Pile.PileType.DISCARD) {
@@ -82,6 +78,20 @@ public class Game extends Pane {
                         cardPile.getTopCard().flip();
                     }
                 }
+            }
+            if (card.getRank() > 1) {
+                for (Pile pile: foundationPiles) {
+                    if (pile.getTopCard().getSuit() == card.getSuit() && card.getRank() - pile.getTopCard().getRank() == 1) {
+                        MouseUtil.slideToDest(cardList, pile);
+                        if (!cardPile.isEmpty() && cardPile.getPileType() != Pile.PileType.DISCARD && cardPile.getTopCard().isFaceDown()) {
+                            cardPile.getTopCard().flip();
+                        }
+                    }
+
+                }
+            }
+            if (isGameWon()) {
+                gameIsWonMessage();
             }
         }
     };
