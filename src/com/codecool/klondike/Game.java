@@ -277,8 +277,8 @@ public class Game extends Pane {
         buttonRestart = new Button("Restart");
         buttonRestart.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
         buttonRestart.setVisible(true);
-        buttonRestart.setLayoutX(450);
-        buttonRestart.setLayoutX(450);
+        buttonRestart.setLayoutX(470);
+        buttonRestart.setLayoutY(20);
         getChildren().add(buttonRestart);
 
 
