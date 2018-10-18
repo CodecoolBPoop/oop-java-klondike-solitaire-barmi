@@ -47,14 +47,18 @@ public class Game extends Pane {
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
+        int movedCardsCount = 0;
         if (card.getContainingPile().getPileType() == Pile.PileType.STOCK &&
                 card == card.getContainingPile().getTopCard()) {
+            movedCardsCount++;
+            numOfMovedCards.add(movedCardsCount);
+            moveAdder(card.getContainingPile(), card);
             card.moveToPile(discardPile);
             card.flip();
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
         }
-        int movedCardsCount = 0;
+
 
         if(e.getClickCount() == 2 && !card.isFaceDown() && card.getContainingPile().getTopCard() == card){
             List cardList = new ArrayList();
@@ -479,9 +483,9 @@ public class Game extends Pane {
                     if(!c.isFaceDown()) flipCount++;
                 }
                 if(!fromPile.isEmpty() && flipCount == 1) fromPile.getTopCard().flip();
-            } //else if(fromPile.getPileType() == Pile.PileType.FOUNDATION){
-
-            //}
+            } else if(fromPile.getPileType() == Pile.PileType.STOCK || (fromPile.getPileType() == Pile.PileType.FOUNDATION && pileTemp.get(0).getPileType() == Pile.PileType.STOCK)){
+                temp.get(0).flip();
+            }
 
             while (tempIterator.hasNext()){
                 Card card = tempIterator.next();
