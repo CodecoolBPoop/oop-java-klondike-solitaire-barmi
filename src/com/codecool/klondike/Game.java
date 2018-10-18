@@ -39,8 +39,11 @@ public class Game extends Pane {
     private static double TABLEAU_GAP = 30;
 
     private Button buttonRestart;
+    private Button undoButton;
 
-
+    private List<Pile> fromPiles = new ArrayList<>();
+    private List<Card> movedCards = new ArrayList<>();
+    private List<Integer> numOfMovedCards = new ArrayList<>();
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
@@ -113,11 +116,15 @@ public class Game extends Pane {
         Pile fromPileOfCard = card.getContainingPile();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
         Pile pile1 = getValidIntersectingPile(card, foundationPiles);
-
+        int movedCards = 0;
 
         if (pile != null) {
+            for(Card c : draggedCards){
+                movedCards++;
+                moveAdder(c.getContainingPile(), c);
+                c.moveToPile(pile);
+            }
 
-            for(Card c : draggedCards) c.moveToPile(pile);
             draggedCards.clear();
             handleValidMove(card, pile);
 
@@ -129,6 +136,8 @@ public class Game extends Pane {
             }
 
         } else if (pile1 != null && card == fromPileOfCard.getTopCard()) {
+            moveAdder(card.getContainingPile(), card);
+            movedCards++;
             card.moveToPile(pile1);
             draggedCards.clear();
             handleValidMove(card, pile1);
@@ -148,6 +157,7 @@ public class Game extends Pane {
             draggedCards.clear();
 
         }
+        numOfMovedCards.add(movedCards);
     };
 
     public boolean isGameWon() {
@@ -183,6 +193,7 @@ public class Game extends Pane {
         initPiles();
         dealCards();
         addEventToRestartButton();
+        addEventToUndoButton();
     }
 
     public void addMouseEventHandlers(Card card) {
@@ -277,9 +288,17 @@ public class Game extends Pane {
         buttonRestart = new Button("Restart");
         buttonRestart.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
         buttonRestart.setVisible(true);
-        buttonRestart.setLayoutX(450);
-        buttonRestart.setLayoutX(450);
+        buttonRestart.setLayoutX(470);
+        buttonRestart.setLayoutY(20);
         getChildren().add(buttonRestart);
+
+
+        undoButton = new Button("Undo");
+        undoButton.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
+        undoButton.setVisible(true);
+        undoButton.setLayoutX(470);
+        undoButton.setLayoutY(70);
+        getChildren().add(undoButton);
 
 
         for (int i = 0; i < 4; i++) {
@@ -342,14 +361,26 @@ public class Game extends Pane {
                 restart();
             }
         });
-
-
     }
+
+    public void addEventToUndoButton() {
+
+        undoButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                undo();
+            }
+        });
+    }
+
   public void restart() {
       discardPile.clear();
       foundationPiles.clear();
       stockPile.clear();
       tableauPiles.clear();
+      fromPiles.clear();
+      movedCards.clear();
+      numOfMovedCards.clear();
       getChildren().clear();
 
 
@@ -358,7 +389,46 @@ public class Game extends Pane {
       initPiles();
       dealCards();
       addEventToRestartButton();
+      addEventToUndoButton();
   }
 
+  public void undo(){
+        System.out.println(movedCards);
+        if(movedCards.size() != 0) {
+            int numOfCardsMoved = numOfMovedCards.get(numOfMovedCards.size()-1);
+            List<Card> temp = movedCards.subList(movedCards.size()-numOfCardsMoved, movedCards.size());
+            List<Pile> pileTemp = fromPiles.subList(fromPiles.size()-numOfCardsMoved, fromPiles.size());
+            System.out.println(temp);
+            
+            Iterator<Card> tempIterator = temp.iterator();
+            Iterator<Pile> pileTempIterator = pileTemp.iterator();
+            Pile fromPile = fromPiles.get(fromPiles.size() - 1);
+
+            if(fromPile.getPileType() == Pile.PileType.TABLEAU){
+                int flipCount = 0;
+                for(Card c : fromPile.getCards()){
+                    if(!c.isFaceDown()) flipCount++;
+                }
+                if(!fromPile.isEmpty() && flipCount == 1) fromPile.getTopCard().flip();
+            }
+            
+            while (tempIterator.hasNext()){
+                Card card = tempIterator.next();
+                Pile pile = pileTempIterator.next();
+                card.moveToPile(fromPile);
+                tempIterator.remove();
+                pileTempIterator.remove();
+                System.out.println("undo");
+            }
+            System.out.println(movedCards);
+            numOfMovedCards.remove(numOfMovedCards.size()-1);
+
+        }
+  }
+
+  private void moveAdder(Pile fromPile, Card card){
+        fromPiles.add(fromPile);
+        movedCards.add(card);
+  }
 
 }
